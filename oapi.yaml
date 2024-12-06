@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/oapi-codegen/oapi-codegen/HEAD/configuration-schema.json
+package: openhab
+
+output: api.go
+
+output-options:
+  overlay:
+    path: overlay.yaml
+  user-templates:
+    # Override the default typedef.tmpl to add a kubebuilder comment for deepcopy-gen. This is required when using any
+    # of these types in a Kubernetes operator.
+    typedef.tmpl: |
+      {{range .Types}}
+      {{ if .Schema.Description }}{{ toGoComment .Schema.Description .TypeName  }}{{ else }}// {{.TypeName}} defines model for {{.JsonName}}.{{ end }}
+      // +kubebuilder:object:generate=true
+      type {{.TypeName}} {{if .IsAlias }}={{end}} {{.Schema.TypeDecl}}
+      {{end}}
+
+generate:
+  models: true
+  client: true
+  echo-server: false

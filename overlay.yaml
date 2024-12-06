@@ -1,0 +1,159 @@
+overlay: "1.0.0"
+info:
+  version: 1.0.0
+  title: "Fix compatibility issues between the openHAB API specification and oapi-codegen"
+actions:
+  - target: $.paths['/addons/url/{url}/install']
+    description: Remove path with 'url' path parameter to avoid conflicts.
+    remove: true
+
+  - target: $.components.schemas.UIComponent.properties
+    description: Add missing slot property to UI component.
+    update:
+      slots:
+        type: object
+        additionalProperties:	
+          type: array
+          items:
+            # $ref: "#/components/schemas/UIComponent"
+            # Kubernetes does not like recursion. Use raw JSON instead.
+            x-go-type: json.RawMessage
+
+  # Use custom openHAB time format.
+  - target: $.components.schemas.GalleryItem.properties.createdDate
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.GalleryItem.properties.updatedDate
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.GalleryWidgetsListItem.properties.createdDate
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.PersistenceItemInfo.properties.earliest
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.PersistenceItemInfo.properties.latest
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.RootUIComponent.properties.timestamp
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.RuleExecution.properties.date
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.UserApiTokenDTO.properties.createdTime
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.UserSessionDTO.properties.createdTime
+    update:
+      x-go-type: OpenHABTime
+  - target: $.components.schemas.UserSessionDTO.properties.lastRefreshTime
+    update:
+      x-go-type: OpenHABTime
+
+  # Use raw JSON for arbitrary request bodies.
+  - target: $.paths['/actions/{thingUID}/{actionUid}'].post.requestBody.content.application/json.schema
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.paths['/addons/{addonId}/config'].put.requestBody.content.application/json.schema
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.paths['/rules/{ruleUID}/config'].put.requestBody.content.application/json.schema
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.paths['/rules/{ruleUID}/runnow'].post.requestBody.content.application/json.schema
+    update:
+      x-go-type: json.RawMessage
+  - target: $.paths['/services/{serviceId}/config'].put.requestBody.content.application/json.schema
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.paths['/things/{thingUID}/config'].put.requestBody.content.application/json.schema
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+
+# Use raw JSON for arbitrary configuration and metadata.
+  - target: $.components.schemas.Addon.properties.properties
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.ActionDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.ChannelDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.ConditionDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.Configuration.properties.properties
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.DiscoveryResultDTO.properties.properties
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.EnrichedChannelDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.EnrichedItemChannelLinkDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.EnrichedItemDTO.properties.metadata
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.EnrichedRuleDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.EnrichedSemanticTagDTO
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.EnrichedThingDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.ItemChannelLinkDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.MetadataDTO.properties.config
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.ModuleDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.RootUIComponent.properties.config
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.RuleDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.ThingDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.TriggerDTO.properties.configuration
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
+  - target: $.components.schemas.UIComponent.properties.config
+    update:
+      x-go-type: json.RawMessage
+      x-go-type-skip-optional-pointer: true
