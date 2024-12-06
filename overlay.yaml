@@ -1,0 +1,20 @@
+overlay: "1.0.0"
+info:
+  version: 1.0.0
+  title: "Fix compatibility issues between the openHAB API specification and oapi-codegen"
+actions:
+  - target: $.paths['/addons/url/{url}/install']
+    description: Remove path with 'url' path parameter to avoid conflicts.
+    remove: true
+  - target: $.components.schemas.ActionDTO.properties.configuration.additionalProperties
+    description: Fix configuration.
+    remove: true
+  - target: $.components.schemas.EnrichedRuleDTO.properties.configuration.additionalProperties
+    description: Fix configuration.
+    remove: true
+  - target: $.components.schemas.RuleDTO.properties.configuration.additionalProperties
+    description: Fix configuration.
+    remove: true
+  - target: $.components.schemas.TriggerDTO.properties.configuration.additionalProperties
+    description: Fix configuration.
+    remove: true
